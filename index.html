@@ -1,0 +1,554 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+        
+        
+        <script type="text/javascript"  src="cordova.js"></script>
+        
+        <link rel="stylesheet" href="css/themes/eyesbet_1.min.css" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile.structure-1.3.0.min.css" />
+        
+        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+        
+        
+        
+        <script type="text/javascript">
+        
+           
+            var deviceInfo = function(){
+                if (navigator.connection.type == "none") {
+                    window.location = "noConnection.html";
+                } else {
+                    
+                    
+                    
+                    
+                    $.ajax({
+                           type: 'GET',
+                           crossDomain: true,
+                           url: 'http://eyesbet.com/m.startup?appVersion=1.0',
+                           dataType: 'xml',
+                           
+                           
+                           success: function(xml){
+                           
+                           if ( $(xml).find("status").attr("value") == "false" ) {
+                           
+                         
+                           $.mobile.changePage("#update_required")
+
+                           
+                           
+                           
+                           }
+                           
+                    
+                           
+                           },
+                           error: function(xhr, error, error2){
+                           
+                            alert("Server Error");
+                           
+                           }
+                           
+                           
+                           });
+                    
+                }
+            }
+            
+        
+            document.addEventListener("deviceready", deviceInfo, true);
+        
+            
+          
+            
+            
+            function getLoginInfo() {
+                var remember = localStorage.getItem('rememberme');
+                if ( remember == 'true' ) {
+                    var username = localStorage.getItem('username');
+                    $('#username').val(username);
+                    $('#rememberme').attr('checked',true).checkboxradio('refresh');
+                }
+            }
+            
+        
+                   
+            
+        function login() {
+            
+                $.mobile.showPageLoadingMsg();
+                
+                $('#password').blur();
+                rememberLogin();
+                username = $("#username").val();
+                pass = $("#password").val();
+                $.ajax({
+                       type: 'POST',
+                       data: "username="+username+"&password="+pass,
+                       crossDomain: true,
+                       url: 'http://eyesbet.com/m.login',
+                       dataType: 'xml',
+                       
+                       
+                       success: function(xml){
+                       
+                       if ( $(xml).find("user").attr("valid") == "true") {
+                       mybets();
+                       $.mobile.changePage("#landingPage",{   transition: "slide",reverse:true}, true, true);
+                            
+                       } else {
+                       $.mobile.hidePageLoadingMsg();
+
+                       alert("Invalid username or password");
+                        
+                       return false;
+                       }
+                       
+                       },
+                       error: function(xhr, error, error2){
+                       $.mobile.hidePageLoadingMsg();
+
+                       alert("We could not process your request. Please try again");
+                       
+                       }
+                       
+                       
+                       });
+                
+                return false;
+                
+            }
+            
+            
+            function mybets() {
+                                
+                $.ajax({
+                       type: 'GET',
+                       url: "http://eyesbet.com/m.displayBets",
+                       dataType: "xml",
+                       
+                       success: function (xml) {
+                       
+                       $.mobile.hidePageLoadingMsg();
+                       
+                       
+                       
+                       },
+                       error: function(xhr, textStatus, error){
+                       alert( xhr.responseText);
+                       window.location = "index.html";
+                       
+                       },
+                       });
+                
+
+                
+                
+            }
+            
+            function rememberLogin() {
+                if ($('#rememberme').is(":checked")) {
+                    var username = $('#username').val();
+                    var password = $('#password').val();
+                    // set cookies to expire in 14 days
+                    localStorage.setItem('username', username);
+                    //localStorage.setItem('password', password);
+                    localStorage.setItem('rememberme', true);
+                } else {
+                    // reset cookies
+                    localStorage.setItem('username', null);
+                    //localStorage.setItem('password', null);
+                    localStorage.setItem('rememberme', null);
+                }
+                
+            }
+            
+            
+         function resetPassword() {
+
+           	  username = $("#resetUsername").val();
+           	  email = $("#resetEmail").val();
+           	  password = $("#resetPassword").val();
+           	  cpassword = $("#resetConfPass").val();
+           	 if (username.length == 0) {
+           		 
+           		 alert("Invalid username");
+           		 return false;
+           	 }
+           	 
+           	 else  if (email.indexOf("@") <= 0 ) {
+           		 
+           		 alert("Invalid email address");
+           		 return false;
+           	 }
+           	 
+           	 else if (password.length <= 3  ) {
+           		 
+           		 alert("Invalid password. Must be greater than 3 charactors");
+           		 return false;
+           	 } else if (password != cpassword) {
+           		 alert("Password dos not math confirmed password");
+           		 return false;
+           	 }
+           	 
+             $.mobile.showPageLoadingMsg();
+
+           	 $.ajax({
+                    type: 'POST',
+                    data: "username="+username+"&email="+email+"&password="+password,
+                    url: 'http://eyesbet.com/m.resetPassword',
+                    dataType: 'xml',
+                    
+                    
+                    success: function(xml){
+                       $.mobile.hidePageLoadingMsg();
+
+                    if ( $(xml).find("msg").attr("value") == "success") {
+                    
+                    alert("Password reset successfully");
+                     window.history.back();
+                    } else {
+                    
+                    	alert("Could not verify username/email" );
+                    	return false;
+                    }
+                    
+                    },
+                    error: function(xhr, error, error2){
+                    
+                    alert(xhr.responseText);
+                    window.location = "index.html";
+                    
+                    }
+                    
+                    
+                    });
+             
+             
+           	 
+           	 return false;
+           	 
+            }
+            
+         function isBlank(str) {
+     	    return (!str || /^\s*$/.test(str));
+     	}
+            
+            
+            function logout() {
+                
+                $.ajax({
+                       type: 'GET',
+                       url: 'http://eyesbet.com/m.logout',
+                       cache: false,
+                       
+                       error: function(xhr, textStatus, error){
+                       //alert( error);
+                       },
+                       });
+                
+                
+                $.mobile.changePage("#page1",{   transition: "slide"});
+
+                
+                
+            }
+
+            
+            
+            
+            </script>
+        
+      <style>
+            .ui-page{
+                
+                background:white;
+            }
+            
+      </style>
+        
+    </head>
+    <body onload="getLoginInfo()">
+        
+        <div  data-role="page" id="page1">
+            
+            <div  data-role="header" >
+                
+                <h3> Sign In </h3>
+                
+            </div>
+            
+            
+            <div data-role="content" data-iscroll >
+                
+                <div align="center">
+                    <img src="img/eyebetsv3.jpg" alt="etyesbet logo" />
+                    
+                </div>
+                
+                
+                
+                <div style="margin-top:35px;">
+                    <div align="right" style="font-size:small;"  >
+                        <a   style="color:darkred"  href="#register" data-transition="flip" >Register </a>
+                    </div>
+                    <form id="login_form"  >
+                        <label for="username" class="ui-hidden-accessible">Username:</label>
+                        <input type="text" name="username" id="username" value="" placeholder="username" data-theme="a"/>
+                        <label for="password" class="ui-hidden-accessible">Password:</label>
+                        <input type="password" name="password" id="password" value="" placeholder="password" data-theme="a"/>
+                        
+                        
+                        
+                        <input type="checkbox"  id="rememberme" data-theme="a"  />
+                        <label for="rememberme">Remember Me</label>
+                        <div align="center" style="margin-top:30px">
+
+                            <button type="submit"  id="login_submit" data-theme="a" onclick="return login();"  data-icon="check" data-inline="true"  >Sign In </button>
+                            
+                        </div>
+                        </form>
+                        
+                        <div align="center">
+
+                         <a href="#resetPasswordPage" style="font-size:small"  data-transition='flip'  data-rel='dialog'    >Reset Password</a></div>
+     
+                        </div>
+                        
+                    
+                </div>
+                
+                
+                
+         
+            
+            
+            
+        </div>
+        
+        
+        
+ <div data-role="page" id="resetPasswordPage" >
+ 
+<div data-role="header">
+<h2>Reset Password</h2>
+</div>
+<div data-role="content">
+
+                
+              
+ 
+  <div style="font-weight:bold"> *All fields required</div>
+    <input type="text" name="username" id="resetUsername" value="" placeholder="Username" data-theme="a"/>
+ 
+    <input type="email" name="email" id="resetEmail" value="" placeholder="Email" data-theme="a"/>
+    
+     <input type="password" name="password" id="resetPassword" value="" placeholder="New Password" data-theme="a"/>
+     <input type="password" name="confirmPassword" id="resetConfPass" value="" placeholder="Confirm Password" data-theme="a"/>
+                               
+    <button type="button" onclick="return resetPassword()"    data-theme="a"   >Submit</button>
+                            
+
+ 
+</div>
+</div>
+        
+        
+        
+        
+        <div data-role="page" id="update_required" >
+            
+            <div data-role="header">
+                <h2>Update Required</h2>
+            </div>
+            <div data-role="content">
+            
+                
+                <div align="center">
+                    <img src="img/eyebetsv3.jpg" alt="etyesbet logo" />
+                    
+                </div>
+                
+                
+                <div align="center"   style="margin-top:30px;font-size:medium;color:darkred;font-weight:bold"> Update required.
+                    <br/>Please update app form app store </div>
+                
+                
+            
+                
+                
+                
+                
+            </div>
+        </div>
+        
+        
+<div data-role="page" id="register" >
+            
+            
+            <script type="text/javascript">
+                
+                function submitForm() {
+                    
+                    var query = "";
+                    firstName = $("#firstName").val();
+                    lastName = $("#lastName").val();
+                    email = $("#email").val();
+                    username = $("#r_username").val();
+                    password = $("#r_password").val();
+                    cpassword = $("#confirmPassword").val();
+                    if (isBlank(firstName)) {
+                    	alert("Invalid First Name");
+                    	return false;
+                    } else if (isBlank(lastName)) {
+                    	alert("Invalid Last Name");
+                    	return false;
+                    } else if (email.indexOf("@") <= 0 || email.indexOf(".") <= 0) {
+                    	alert("Invalid email");
+                    	return false;
+                    } else if (isBlank(username)) {
+                    	
+                    	alert("Invalid username");
+                    	return false;
+                    } else if (password.length <= 3 ) {
+                    	alert(password);
+                    	alert("Invalid password. Must be greater than 3 characters");
+                    	return false;
+                    }
+                    
+                    
+                    if (password != cpassword) {
+                        
+                        alert("Password does not match the confirm password");
+                        return false;
+                    } else {
+                        query = "firstName="+firstName+"&lastName="+lastName+"&email="+email+"&username="+username+"&password="+password;
+                    }
+                    
+                    $.mobile.showPageLoadingMsg();
+
+                    $.ajax({
+                           type: 'POST',
+                           data: query,
+                           url: 'http://eyesbet.com/m.register',
+                           dataType: 'xml',
+                           success: function(xml){
+                           $.mobile.hidePageLoadingMsg();
+                           
+                           exist = $(xml).find("result").attr("exist");
+                           if (exist == "false") {
+                           
+                                alert("Username and password already exist.");
+
+                           } else {
+                                alert("You have registered successfully");
+                                window.location = "index.html";
+
+                           }
+                           
+
+                           
+                           },
+                           error: function(){
+                           $.mobile.hidePageLoadingMsg();
+
+                           alert("There was an error processing your request");
+                           }
+                           });
+                    
+                    
+                    
+                    return false;
+                }
+                
+                
+                function cancelRegister() {
+                    
+                    window.history.back();
+                }
+                
+                </script>
+            
+            <div data-role="header">
+                <h2>Register</h2>
+            </div>
+            <div data-role="content">
+                
+                <div style="font-weight:bold"> *All fields required</div>
+                
+                
+                
+                
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    
+                    <tr>
+                         <td>   <input type="text" placeholder="First Name" name="firstName" id="firstName" />
+                        </td>  </tr>
+                    <tr> <td><input type="text" placeholder="Last Name" id="lastName" name="lastName"  />
+                    </td>  </tr>
+                    <tr><td> <input type="email" name="email" id="email" placeholder="Email"  /> </td>  </tr>
+                    <tr><td> <input type="text"  id="r_username" placeholder="Username"  /> </td>  <tr>
+                        <tr><td> <input type="password"  id="r_password" placeholder="Password" /> <td>  </tr>
+                        <tr> <td> <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" /> </td>  </tr>
+                        
+                        
+                        </table>
+                
+                
+            </div>
+            
+            <div align='center' data-role="footer" data-position="fixed" >
+                
+                    <fieldset    data-role="controlgroup" data-type="horizontal" >
+                        
+                        <a href="#" data-role="button"  data-theme="a" data-icon="add"  onclick="return submitForm()">Register</a>
+                        <a href="#"  data-role="button"  data-theme="a"  data-icon="delete"  onclick="cancelRegister()">Cancel</a>
+                        
+                    </fieldset>
+                
+                
+            </div>
+        </div>
+        
+        
+        
+        <div data-role="page" id="landingPage" >
+            
+            <div data-role="header" data-theme="a"  data-position="fixed">
+                <h2>Options</h2>
+                
+                
+            </div>
+            
+            <div data-role="content" >
+                
+                
+                <div align="center">
+                    <img src="img/eyebetsv3.jpg" alt="etyesbet logo" />
+                    
+                </div>
+                
+                <a href="javascript:window.location='displayLeagues.html';"  data-theme="a" data-role="button" >Create Bet </a>
+                
+                <a href="javascript:window.location='displayBets.html';" data-theme="a" data-role="button" >My Bets </a>
+                
+                <a href="javascript:window.location='tracker.html';" data-theme="a"  data-role="button" >Streamer</a>
+                
+                <a href="javascript:logout();" data-theme="a"  data-role="button" >Sign Out</a>
+                
+                
+                
+            </div>
+            
+            
+        </div>
+        
+
+        
+        
+        
+    </body>
+</html>
