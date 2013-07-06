@@ -76,7 +76,7 @@ $.ajax({
                                      
                                      
                                      
-                $('#'+type).append("<tr style='background-color:lightgray;font-weight:bold;font-size:medium;'><td></td><td height='50%' style='margin-left:5px'>  <b><a href='#' style='font-weight:bold;color:"+color+"' onclick=\"viewDetail('"+$(this).attr("id")+"')\" >"+ $(this).attr("name")+"</a></b></td><td width='5%' >    <a href='#'  onclick=\"return removeBet('"+$(this).attr("id") +"' )\"  ><img  height='23' src='img/delete.png' /></a></td></tr>" );
+                $('#'+type).append("<tr style='background-color:lightgray;font-weight:bold;font-size:medium;'><td ></td><td colspan='2' style='margin-left:5px'><div style='padding-top:5px;padding-bottom:5px;background-color:lightgray;color:"+color+"' onclick=\"viewDetail('"+$(this).attr("id")+"')\" >"+$(this).attr("name") +"  <span align='right' ><img align='right' src='img/right-arrow.png' /></span> </div> </td></tr>" );
                                      
                                      
                  $(this).find("game").each(function() {
@@ -86,7 +86,7 @@ $.ajax({
                     $('#'+type).append("<tr ><td colspan='3' ><div style='margin-left:10px'><b>Game:</b><br/>" + $(this).attr("a") + " <b>"+$(this).attr("as") + "</b>  @  "+ $(this).attr("h") + " <b>"+ $(this).attr("hs") +"</b></div></td></tr><tr><td colspan='3'><div style='margin-left:10px'><b>Schedule:</b><br/> "+$(this).attr("sch")+ "</div></td></tr><tr  ><td colspan='3' style='height:20%'></td></tr>");
                                           
                                            
-                        } else if (type == "parlay") {
+                    } else if (type == "parlay") {
                         $('#'+type).append("<tr><td colspan='3' ><div style='margin-left:10px'><b>Game: </b><br/>" + $(this).attr("a") + " <b>"+$(this).attr("as") + "</b>  @  "+ $(this).attr("h") + " <b>"+ $(this).attr("hs") +"</b></div></td></tr><tr><td colspan='3'><div style='margin-left:10px'><b>Schedule:</b><br/> "+$(this).attr("sch")+ " ("+$(this).attr("stt")+")</div></td></tr><tr  ><td colspan='3'  style='height:20%;border-top:1px;border-top-style:solid;border-top-color:black'></td></tr>");
                                            
                                            
@@ -100,7 +100,7 @@ $.ajax({
 		 
 		  });
       
-      $('#scroller').show().trigger("updatelayout");
+       $('#scroller').show().trigger("updatelayout");
 
    
       if (count == 0) {

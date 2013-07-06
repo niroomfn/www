@@ -179,25 +179,25 @@ function parseXml(xml) {
 	 $(xml).find("game").each(function()
 	  	{
                 gameCount++;
-	  			row = "<tr><td width='25%'>"+ $(this).attr("a") +" </td>"+
-	  			 "<td width='20%'><input type='radio' id='"+$(this).attr("id")+"_moneyline'"+" name='"+$(this).attr("id")+"_moneyline' value='"+$(this).attr("a")+"'  /> </td>"+
+	  			row = "<tr><td width='30%'>"+ $(this).attr("a") +" </td>"+
+	  			 "<td align='right' width='10%'><input type='radio' id='"+$(this).attr("id")+"_moneyline'"+" name='"+$(this).attr("id")+"_moneyline' value='"+$(this).attr("a")+"'  /> </td>"+
                 
                               
 
-	  			" <td><select name='"  + $(this).attr("a")+"_fu' > <option value='+' >+</option> <option value='-' >-</option> </select>"+
+	  			" <td align='right'><select name='"  + $(this).attr("a")+"_fu' > <option value='+' >+</option> <option value='-' >-</option> </select>"+
 	  			 "<input type='number' id='"+$(this).attr("a")+"_spreadPoint'"+" name='"+$(this).attr("a")+"_spreadPoint' style='width:25px'  onkeydown='validatePointSpread('"+$(this).attr("id")+"')' /> </td>"+
 	  			 
-	  			 "<td style='font-weight:bold'>O: <input type='number' id='"+$(this).attr("id")+"_over' name='"+$(this).attr("id")+"_over' style='width:25px' onkeydown='validateOverUnder('"+$(this).attr("id")+"','over')' /> </td></tr>";
+	  			 "<td align='right' style='font-weight:bold'>O: <input type='number' id='"+$(this).attr("id")+"_over' name='"+$(this).attr("id")+"_over' style='width:25px' onkeydown='validateOverUnder('"+$(this).attr("id")+"','over')' /> </td></tr>";
 	  			$('#betTable').append(row);
 	  			 
 	  			 
 	  			row = "<tr><td width='25%'>"+ $(this).attr("h") +" </td>"+
-	  			 "<td width='20%'><input type='radio' id='"+$(this).attr("id")+"_moneyline'"+" name='"+$(this).attr("id")+"_moneyline' value='"+$(this).attr("h")+"'  /> </td><td>"+
+	  			 "<td align='right' width='10%'><input type='radio' id='"+$(this).attr("id")+"_moneyline'"+" name='"+$(this).attr("id")+"_moneyline' value='"+$(this).attr("h")+"'  /> </td><td align='right'>"+
 
 	  			" <select name='"+$(this).attr("h")+"_fu' > <option value='+' >+</option> <option value='-' >-</option> </select>"+
 	  			 "<input type='number' id='"+$(this).attr("h")+"_spreadPoint'"+" name='"+$(this).attr("h")+"_spreadPoint' style='width:25px'  onkeydown='validatePointSpread('"+$(this).attr("id")+"')' /> </td>"+
 	  			 
-	  			 "<td style='font-weight:bold'>U: <input type='number' id='"+$(this).attr("id")+"_under' name='"+$(this).attr("id")+"_under' style='width:25px'  onkeydown='validateOverUnder('"+$(this).attr("id")+"','under')' /> </td></tr>";
+	  			 "<td align='right' style='font-weight:bold'>U: <input type='number' id='"+$(this).attr("id")+"_under' name='"+$(this).attr("id")+"_under' style='width:25px'  onkeydown='validateOverUnder('"+$(this).attr("id")+"','under')' /> </td></tr>";
 	  			$('#betTable').append(row);
 	  			 
 	  			row = "<tr><td style='border-bottom-width:1px;border-bottom-style:solid;' colspan='4'></td></tr>"; 
@@ -241,7 +241,8 @@ function parseXml(xml) {
         document.getElementById(betTye).checked = "checked";
         
     }
-    
+    $('#scroller').show().trigger("updatelayout");
+
     inputs = null;
 	
 	
@@ -416,7 +417,7 @@ function isBlank(str) {
   </div>
     
     
-    <div style="font-size:small" data-role="content" id="scroller" data-iscroll >
+    <div style="font-size:small" data-role="content"  >
         <div style="margin-left:5px;margin-right:5px" >
 
     <div style="margin-top:20px">
@@ -454,15 +455,15 @@ function isBlank(str) {
     </td>
 
 </tr>
-</table>
+</table >
 
 <table   cellpadding="1" width="100%">
 <tr style="font-weight: bold;">
-<td width="25%" > </td>
-<td width="15%">Money Line</td>
+<td align='left' width="25%" > </td>
+<td align='right' width="10%">Money Line</td>
 
-<td >Spread Point</td>
-<td >Over/Under</td>
+<td align='right' >Points</td>
+<td align='right'>Over/Under</td>
 
 
 </tr>

@@ -90,7 +90,7 @@ $.ajax({
                                     
            // $('#'+id).append( "<label><input data-theme='a' type='checkbox'  name='games' id='"+gameid+"' value='"+value+ "' />"+$(this).attr("a")+" @ "+ $(this).attr("h")+ "<br/> "+$(this).attr("s")+"</label>");
                                     
-            $("#"+id).append("<div align='left'  onclick=\"check('"+gameid+"')\" style='font-weight:bold;margin-bottom:10px;background-color:lightgray;padding-left:10px;padding-right10px;padding-top:10px;padding-bottom:10px;border-width:2px;border-style:solid;border-color:black' > <input style='height:15px;width:15px;background:darkred' type='checkbox' value='"+value+"' name='games' id='"+gameid+"' /> " + $(this).attr("a")+" @ "+ $(this).attr("h")+ "<br/> <span style='padding-left:23px'>"+$(this).attr("s")+"</span></div>");
+            $("#"+id).append("<div align='left'  onclick=\"check('"+gameid+"')\" style='font-weight:bold;margin-bottom:10px;background-color:lightgray;padding-left:10px;padding-right10px;padding-top:10px;padding-bottom:10px;border-width:2px;border-style:solid;border-color:black' > <input style='width:18px;background:darkred' type='checkbox' value='"+value+"' name='games' id='"+gameid+"' /> " + $(this).attr("a")+" @ "+ $(this).attr("h")+ "<br/> <span style='padding-left:23px'>"+$(this).attr("s")+"</span></div>");
                                     
         });
                                    
@@ -169,10 +169,8 @@ $.ajax({
  	   alert("You must select a game to continue");
  	   return false;
  	} else {
- 		$.mobile.showPageLoadingMsg();
-
+        
  	   submitForm(checkedGames);
-		$.mobile.hidePageLoadingMsg();
 
  	   return false;
  	}
@@ -203,6 +201,7 @@ $.ajax({
         }
         
         if ( $("#"+value).html().indexOf("checkbox") < 0) {
+            $.mobile.showPageLoadingMsg();
         $.ajax({
                type: 'GET',
                url: "http://eyesbet.com/fixtures?league="+value,
@@ -242,7 +241,7 @@ $.ajax({
           query = "&editBet=true&betId="+betId;
       }
       
-      
+      $.mobile.showPageLoadingMsg();
   
   	$.ajax({
 		type: 'POST',
@@ -256,7 +255,7 @@ $.ajax({
 			
 		},
 		error: function(xhr, textStatus, error){
-			
+			$.mobile.hidePageLoadingMsg();
 			alert(xhr.responseText);
            window.location = "index.html";
 

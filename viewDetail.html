@@ -364,12 +364,13 @@
     <div data-role="page" id="page1" >
         
         
-        <div data-role="header" data-theme="a"  data-position="fixed">
-  <a href="#"  onclick="deleteBet()" data-inline="true"   data-theme="a" data-role="button" >Delete Bet</a>
-            
-            
+        <div  data-role="header" data-theme="a"  data-position="fixed">
+
+            <a href="#nav-panel" data-inline="true"    >Edit Bet</a>
+
             <h1>Bet Detail</h1>
-    <a href="#" onclick="return addBet()"   data-inline="true" data-theme="a"  data-role="button" >Add Bet</a>
+   
+
    
         </div>
         
@@ -412,6 +413,19 @@
             
             
         </div>
+        
+        
+        
+        <div data-role="panel" data-position-fixed="true" style="background-color:black;" data-theme="a" id="nav-panel">
+            <ul data-role="listview" data-theme="a" class="nav-search">
+                <li data-icon="delete"><a href="#" data-rel="close">Cancel</a></li>
+                <li > <a data-icon-pos="left"  href="#" onclick="return deleteBet()"  > Delete Bet </a>  </li>
+                <li><a href="#" onclick="addBet()"  >Add Bet</a></li>
+                
+            </ul>
+            
+            
+        </div><!-- /panel -->
      
      
 </div>
