@@ -10,24 +10,25 @@
         
         <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
-        
+        <script src="js/properties.js"></script>
+
         
         
         <script type="text/javascript">
         
-           
+            var serverUrl;
+
             var deviceInfo = function(){
+                serverUrl = serverInfo.url;
                 if (navigator.connection.type == "none") {
                     window.location = "noConnection.html";
                 } else {
                     
                     
-                    
-                    
                     $.ajax({
                            type: 'GET',
                            crossDomain: true,
-                           url: 'http://eyesbet.com/m.startup?appVersion=1.0',
+                           url: serverUrl+"/m.startup?appVersion=1.0",
                            dataType: 'xml',
                            
                            
@@ -89,7 +90,7 @@
                        type: 'POST',
                        data: "username="+username+"&password="+pass,
                        crossDomain: true,
-                       url: 'http://eyesbet.com/m.login',
+                       url: serverUrl+'/m.login',
                        dataType: 'xml',
                        
                        
@@ -127,7 +128,7 @@
                                 
                 $.ajax({
                        type: 'GET',
-                       url: "http://eyesbet.com/m.displayBets",
+                       url: serverUrl+"/m.displayBets",
                        dataType: "xml",
                        
                        success: function (xml) {
@@ -199,7 +200,7 @@
            	 $.ajax({
                     type: 'POST',
                     data: "username="+username+"&email="+email+"&password="+password,
-                    url: 'http://eyesbet.com/m.resetPassword',
+                    url: serverUrl+'/m.resetPassword',
                     dataType: 'xml',
                     
                     
@@ -242,7 +243,7 @@
                 
                 $.ajax({
                        type: 'GET',
-                       url: 'http://eyesbet.com/m.logout',
+                       url: serverUrl+'/m.logout',
                        cache: false,
                        
                        error: function(xhr, textStatus, error){
@@ -433,7 +434,7 @@
                     $.ajax({
                            type: 'POST',
                            data: query,
-                           url: 'http://eyesbet.com/m.register',
+                           url: serverUrl+'/m.register',
                            dataType: 'xml',
                            success: function(xml){
                            $.mobile.hidePageLoadingMsg();

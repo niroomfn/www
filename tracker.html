@@ -12,6 +12,8 @@
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
     <script src="js/iscroll.js"></script>
+    <script src="js/properties.js"></script>
+
     <script src="js/jquery-mobile-iscrollview.js"></script>
 
     
@@ -20,7 +22,7 @@
  <script type="text/javascript">
      
     var tracker = "#tracker";
-     
+     var serverUrl = serverInfo.url;
      $( window ).on( "orientationchange", function( event ) {
                     
                 if (event.orientation == "landscape") {
@@ -84,11 +86,12 @@
    
      $(document).ready(function() {
                        
+                       
                        $.mobile.showPageLoadingMsg();
                        
                        $.ajax({
                               type: 'GET',
-                              url: "http://eyesbet.com/m.trackBet",
+                              url: serverUrl+"/m.trackBet",
                               dataType: "xml",
                               
                               success: function (xml) {
@@ -311,7 +314,7 @@
      function liveGameParser() {
          $.ajax({
                 type: 'GET',
-                url: "http://eyesbet.com/m.livegame",
+                url: serverUrl+"/m.livegame",
                 dataType: "xml",
                 
                 success: function (xml) {
@@ -356,7 +359,7 @@
          
          $.ajax({
                 type: 'GET',
-                url: 'http://eyesbet.com/m.logout',
+                url: serverUrl+'/m.logout',
                 cache: false,
              
                 error: function(xhr, textStatus, error){
@@ -388,7 +391,7 @@
         
          $.ajax({
                 type: 'GET',
-                url: 'http://eyesbet.com/m.trackBet?betId='+betid,
+                url: serverUrl+'/m.trackBet?betId='+betid,
                 dataType: 'xml',
                 
                 success: function (xml) {
@@ -616,7 +619,7 @@
          
          $.ajax({
                 type: 'GET',
-                url: "http://eyesbet.com/m.trackBet?cmd=cancel",
+                url: serverUrl+"/m.trackBet?cmd=cancel",
                 cache: false
                 
          

@@ -12,11 +12,12 @@
  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
      <script src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
     <script src="js/iscroll.js"></script>
+    <script src="js/properties.js"></script>
+
     <script src="js/jquery-mobile-iscrollview.js"></script>
  <script type="text/javascript">
-  
+     var serverUrl = serverInfo.url;
      $(document).ready(function() {
-                       
                        
                        
                        $.mobile.showPageLoadingMsg();
@@ -25,7 +26,7 @@
                        
                        $.ajax({
                               type: 'GET',
-                              url: "http://eyesbet.com/m.betDetail",
+                              url: serverUrl+"/m.betDetail",
                               dataType: "xml",
                               
                               success: function (xml) {
@@ -188,7 +189,7 @@
          
          $.ajax({
                 type: 'GET',
-                url: 'http://eyesbet.com/m.logout',
+                url: serverUrl+"/m.logout",
                 dataType: 'xml',
                 
                 success: function (xml) {
@@ -219,7 +220,7 @@
              $.ajax({
                     type: 'POST',
                     data: "betId="+betid,
-                    url: 'http://eyesbet.com/m.removeBet',
+                    url: serverUrl+'/m.removeBet',
                     dataType: 'xml',
                     
                     success: function(xml){
@@ -255,7 +256,7 @@
               $.ajax({
                      type: 'GET',
                      data: "betId="+betId+"&gameId="+gameId+"&type="+type+"&cmd=deleteParlay",
-                     url: 'http://eyesbet.com/m.editBet',
+                     url: serverUrl+'/m.editBet',
                      dataType: 'xml',
                      
                      success: function(xml){
@@ -308,7 +309,7 @@
     		  $.ajax({
                   type: 'GET',
                   data: "betId="+betId+"&name="+name+"&cmd=changeName",
-                  url: 'http://eyesbet.com/m.editBet',
+                  url: serverUrl+'/m.editBet',
                   dataType: 'xml',
                   
                   success: function(xml){

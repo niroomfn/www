@@ -15,23 +15,25 @@
      
      <link rel="stylesheet" href="css/jquery-mobile-iscrollview.css"/>
     <script src="js/iscroll.js"></script>
+    <script src="js/properties.js"></script>
+
     <script src="js/jquery-mobile-iscrollview.js"></script>
     
 <script type="text/javascript">
 
  var leagues = ["NBA","NFL","MLB","NHL"];
-    
+    var serverUrl;
 
     
 $(document).ready(function() {
                   
-
+                  serverUrl = serverInfo.url;
 $.mobile.showPageLoadingMsg();
                 
 
 $.ajax({
         type: 'GET',
-        url: "http://eyesbet.com/fixtures",
+        url: serverUrl+"/fixtures",
         dataType: "xml",
        cache: true,
         success: function (xml) {
@@ -203,7 +205,7 @@ $.ajax({
             $.mobile.showPageLoadingMsg();
         $.ajax({
                type: 'GET',
-               url: "http://eyesbet.com/fixtures?league="+value,
+               url: serverUrl+"/fixtures?league="+value,
                dataType: "xml",
                cache: true,
                success: function (xml) {
@@ -245,7 +247,7 @@ $.ajax({
   	$.ajax({
 		type: 'POST',
 		data: "games="+games + query,
-		url: 'http://eyesbet.com/m.createBet',
+		url: serverUrl+'/m.createBet',
 		dataType: 'xml',
 		
 		success: function(xml){
