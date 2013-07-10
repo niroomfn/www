@@ -131,16 +131,88 @@ function validatePointSpread(game) {
 }
 
 
+    
+function parseEntries(entries, gameid, betType) {
+        
+
+    
+    if (entries.length) {
+                
+        if (betType == "moneyline") {
+            entries.find("entry").each(function() {
+                            if ($(this).attr("gameid") == gameid) {
+                                       team = $(this).attr("mn");
+                                       radios = document.getElementsByName(gameid+"_moneyline");
+                                    for ( var i=0; i < radios.length; i++) {
+                                       
+                                       if (radios[i].value == team ) {
+                                           radios[i].checked = "checked";
+                                       }
+                                       
+                                    }
+                                       
+                                       return;
+                            }
+                                       
+                                       
+            });
+            
+            
+        } else {
+            
+            entries.find("entry").each(function() {
+                                    if ($(this).attr("gameid") == gameid ) {
+                                            spteam = $(this).attr("spteam");
+                                            fu =  document.getElementsByName(spteam+"_fu");
+                                            fuValue = $(this).attr("sp");
+                                            fu[0].value = fuValue.substring(0, 1);
+                                       document.getElementById(spteam+"_spreadPoint").value = fuValue.substring(1, fuValue.length);
+                                       ou = $(this).attr("ou");
+                                       if (ou == "") {
+                                       return;
+                                       }
+                                            
+                                       if (ou == "o") {
+                                       document.getElementById(gameid+"_over").value = $(this).attr("oupoints");
+                                       } else {
+                                       document.getElementById(gameid+"_under").value = $(this).attr("oupoints");
+
+                                       
+                                       }
+                                       
+                                       return;
+                                       
+                                       }
+                                       
+                                       
+                                       
+                                       
+                                       });
+            
+            
+            return;
+            
+        }
+    
+    
+    }
+    
+    
+    return;
+    
+        
+}
 
 function parseXml(xml) {
 	 row = "";
     lockType = false;
-	 $(xml).find("bet").each(function() {
-		 
-		 betType = $(this).attr("type");
-        lockTypeTo = $(this).attr("lockTypeTo");
+    bet = $(xml).find("bet");
+	entries = bet.find("entries");
+    
+		 betType = bet.attr("type");
+        lockTypeTo = bet.attr("lockTypeTo");
                 
-        if ($(this).attr("lockType") == "true") {
+        if (bet.attr("lockType") == "true") {
                              lockType = true;
                             
                              $("#"+lockTypeTo).attr("checked","true");
@@ -168,7 +240,6 @@ function parseXml(xml) {
                         
             $("#"+lockTypeTo).checkboxradio("refresh");
      
-	 } );
 	 
 	
 	if (typeof sessionStorage.betName != "undefined" ) {
@@ -184,7 +255,7 @@ function parseXml(xml) {
                 
                               
 
-	  			" <td align='right'><select name='"  + $(this).attr("a")+"_fu' > <option value='+' >+</option> <option value='-' >-</option> </select>"+
+	  			" <td align='right'><select name='"+$(this).attr("a")+"_fu' > <option value='+' >+</option> <option value='-' >-</option> </select>"+
 	  			 "<input type='number' id='"+$(this).attr("a")+"_spreadPoint'"+" name='"+$(this).attr("a")+"_spreadPoint' style='width:25px'  onkeydown='validatePointSpread('"+$(this).attr("id")+"')' /> </td>"+
 	  			 
 	  			 "<td align='right' style='font-weight:bold'>O: <input type='number' id='"+$(this).attr("id")+"_over' name='"+$(this).attr("id")+"_over' style='width:25px' onkeydown='validateOverUnder('"+$(this).attr("id")+"','over')' /> </td></tr>";
@@ -202,6 +273,8 @@ function parseXml(xml) {
 	  			 
 	  			row = "<tr><td style='border-bottom-width:1px;border-bottom-style:solid;' colspan='4'></td></tr>"; 
 	  			$('#betTable').append(row);
+             
+                parseEntries(entries,$(this).attr("id"),lockTypeTo);
 			   
 	});  
 	 

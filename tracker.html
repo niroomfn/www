@@ -49,7 +49,7 @@
                    
                         tracker = "#landscape_tracker";
                         $('#landscape_tracker').show().trigger("updatelayout");
-                    $.mobile.changePage( $("#landscape_page"), { reloadPage: true });
+                    $.mobile.changePage( $("#landscape_page"), {changeHash: false});
                     
                     }
 
@@ -112,20 +112,23 @@
      
      function parseSortedGames(games) {
          $('#tracker').append("<div align='center' >" );
-
+         var betinfo;
          games.find("game").each(function () {
-                game = $(this);
+            game = $(this);
              
             array = game.attr("bets").split(";");
+                                 
                bets= "<div style='padding-left:10%'>";
              
-                        for (var i=0; i < array.length; i++) {
-                            bets =bets + "<a style='color:darkblue' href=\"javascript:trackBet('"+game.attr("bid")+"')\">"+array[i]+"</a><br/>";
+                for (var i=0; i < array.length; i++) {
+                        betinfo = array[i].split("=");
                                  
-                            }
+                        bets =bets + "<a style='color:darkblue;font-weight:bold' href=\"javascript:trackBet('"+betinfo[1]+"')\">"+betinfo[0]+"</a><br/>";
+                                 
+                    }
                 bets = bets +"</div>";
              
-             html =  "<div  style='background-color:lightgray;padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;margin-bottom:10px;' ><center><b>"+game.attr("g")+"</b><br/><span style='font-size:small'>"+game.attr("st")+"</span></center><hr/><div style='margin-left:5px'><b>Associated Bets</b> <br/>"+bets+"</div> </div>";
+             html = "<div style='background-color:lightgray;padding-left:5px;padding-right:5px;padding-top:10px;padding-bottom:10px;margin-bottom:10px;' ><center><b>"+game.attr("g")+"</b><br/><span style='font-size:small'>"+game.attr("st")+"</span></center><hr/><div style='margin-left:5px'><b>Associated Bets</b> <br/>"+bets+"</div> </div>";
                                  
             $('#tracker').append(html );
                                  
@@ -620,8 +623,13 @@
                 });
          
          
-         
-         window.location = "displayBets.html";
+         if ( document.getElementById("games") == null) {
+             
+             window.location = "tracker.html";
+         } else {
+             
+             history.back();
+         }
          
      }
      
@@ -717,7 +725,7 @@
  <div  id="tracker_content" data-role="content" data-iscroll >
             
              <div id="tracker"   >
-                <div align="center" style="height:30px;padding-top:15px;border-bottom-width:2px;border-bottom-style:solid;border-bottom-color:black;font-weight:bold;background-color:lightgray;margin-bottom:0px">Games </div>
+                <div align="center" id="games" style="height:30px;padding-top:15px;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:black;font-weight:bold;background-color:lightgray;margin-bottom:0px">Games </div>
                 
                  
              </div>
