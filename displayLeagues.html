@@ -23,12 +23,26 @@
 
  var leagues = ["NBA","NFL","MLB","NHL"];
     var serverUrl;
-
+    var editMode = false;
     
 $(document).ready(function() {
                   
-                  serverUrl = serverInfo.url;
+                  
 $.mobile.showPageLoadingMsg();
+
+                  
+    if (typeof sessionStorage.betName != "undefined") {
+            editMode = true;
+                  $("#createBet").css("display","none");
+                  $("#addBet").css("display","");
+                  } else {
+                  $("#createBet").css("display","");
+                  $("#addBet").css("display","none");
+                  
+                  }
+                 
+                  
+ serverUrl = serverInfo.url;
                 
 
 $.ajax({
@@ -102,7 +116,7 @@ $.ajax({
     	   
        }
         
-       
+        
 
         
     }
@@ -235,11 +249,9 @@ $.ajax({
   
   function submitForm(games) {
       query = "";
-      betId = sessionStorage.betId;
       
-      if (typeof betId != "undefined" ) {
-          
-          query = "&editBet=true&betId="+betId;
+      if (editMode == true) {
+          query = "&editBet=true&betId="+sessionStorage.betId;
       }
       
       $.mobile.showPageLoadingMsg();
@@ -384,8 +396,9 @@ $.ajax({
         
         
 
-            <a href="#" data-role="button"  onclick="return validate()" data-theme="a">Create Bet</a>
-        
+            <a href="#" data-role="button" id="createBet" onclick="return validate()" data-theme="a">Create Bet</a>
+            <a href="#" data-role="button" id="addBet" onclick="return validate()" data-theme="a">Add Bet</a>
+
         
         
     

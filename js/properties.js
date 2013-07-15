@@ -3,6 +3,6 @@
 var serverInfo =
 {
     
-url: "http://eyesbet.com/mobileTest"
+url: "http://eyesbet.com:8080/mobileTest"
     
 }

@@ -23,22 +23,13 @@
      
     var tracker = "#tracker";
      var serverUrl = serverInfo.url;
-     $( window ).on( "orientationchange", function( event ) {
-                    
+    $( window ).on( "orientationchange", function( event ) {
+
                 if (event.orientation == "landscape") {
                     
-                       // $("#landscape_selectbet").append( $("#portrait_selectbet").html());
-                   // $("#portrait_selectbet").empty();
-                       // $("#selectBet").css("display","");
+    
+                   rows = $("#mytable tr").length;
 
-                        //$("#selectBet").selectmenu("refresh","true");
-                    if ($("#tracker").html() != "") {
-                        $('#landscape_tracker').html( $("#tracker").html()   );
-
-                    
-                        $("#tracker").html("");
-                    
-                        rows = $("#mytable tr").length;
                         for (var i=0; i < rows; i++) {
                     
                             $("#qt_"+i).css("display","");
@@ -47,47 +38,45 @@
                     
                         $("#status").html("Status");
                         $('table td:nth-child(5)').show();
-                    
+         
+                    $("#portrait_selectbet").hide();
                    
-                        tracker = "#landscape_tracker";
-                        $('#landscape_tracker').show().trigger("updatelayout");
-                    $.mobile.changePage( $("#landscape_page"), {changeHash: false});
-                    
-                    }
+                   
+
 
                     
                     } else {
                     
-                   // $("#portrait_selectbet").html($("#landscape_selectbet").html());
-                    //$("#landscape_selectbet").html("");
-
-                    
-                        tracker = "#tracker";
-                    
-                        $("#tracker").html( $("#landscape_tracker").html());
-
-                        $("#landscape_tracker").html("");
+                   
                     
                         $("#status").html("ST");
                         $('table td:nth-child(5)').hide();
-
+                   if ($("#stream_bet").length <= 0 ) {
+                        $("#portrait_selectbet").show();
+                   }
                         $('#trakcer').show().trigger("updatelayout");
 
-                        $.mobile.changePage( "#page_1");
 
 
                     
-                    }
                     
-        });
+                   }
+                    
+        }); 
      
      
      var timerId = 0;
-   
+     var portrait;
      $(document).ready(function() {
                        
                        
                        $.mobile.showPageLoadingMsg();
+                        portrait;
+                       if (window.orientation == 0 || window.orientation == 180){
+                       portrait = true;
+                       } else {
+                       portrait = false;
+                       }
                        
                        $.ajax({
                               type: 'GET',
@@ -96,8 +85,6 @@
                               
                               success: function (xml) {
                               parseBets(xml);
-                              
-                              parseSortedGames($(xml).find("games"));
                               $.mobile.hidePageLoadingMsg();
 
                               
@@ -113,35 +100,7 @@
      
      
      
-     function parseSortedGames(games) {
-         $('#tracker').append("<div align='center' >" );
-         var betinfo;
-         games.find("game").each(function () {
-            game = $(this);
-             
-            array = game.attr("bets").split(";");
-                                 
-               bets= "<div style='padding-left:10%'>";
-             
-                for (var i=0; i < array.length; i++) {
-                        betinfo = array[i].split("=");
-                                 
-                        bets =bets + "<a style='color:darkblue;font-weight:bold' href=\"javascript:trackBet('"+betinfo[1]+"')\">"+betinfo[0]+"</a><br/>";
-                                 
-                    }
-                bets = bets +"</div>";
-             
-             html = "<div style='background-color:lightgray;padding-left:5px;padding-right:5px;padding-top:10px;padding-bottom:10px;margin-bottom:10px;' ><center><b>"+game.attr("g")+"</b><br/><span style='font-size:small'>"+game.attr("st")+"</span></center><hr/><div style='margin-left:5px'><b>Associated Bets</b> <br/>"+bets+"</div> </div>";
-                                 
-            $('#tracker').append(html );
-                                 
-        });
-         
-         $("#tracker").append("</div>")
-         $('#tracker').show().trigger("updatelayout");                     
-
-     }
-     
+  
      
      
      function timer(time) {
@@ -200,8 +159,6 @@
      
      
      function updateLiveBetStatus(gamebet) {
-         
-         
          
          as = toNumber(gamebet.attr("as"));
          hs = toNumber(gamebet.attr("hs"));
@@ -337,18 +294,23 @@
 
      
      function parseBets(xml) {
+        
+        var s= document.getElementById("selectBet");
          
-         
-         var s= document.getElementById('selectBet');
-         
-         s.style.display = "";
-         
+         html = "";
          $(xml).find("bet").each(function() {
                                  
             s.options[s.options.length]= new Option($(this).attr("n"), $(this).attr("v"));
                                  
-                                 } );
+             html = html + "<li style='margin-bottom:10px'><a data-theme='a' data-role='button' href=\"javascript:trackBet('"+$(this).attr("v")+"')\" >"+$(this).attr("n")+"</a></li>";
+            
+                                 
+                } );
          
+         $("#stream_bet").append(html);
+         $("#stream_bet").listview("refresh");
+
+
          
      }
    
@@ -362,13 +324,9 @@
                 url: serverUrl+'/m.logout',
                 cache: false,
              
-                error: function(xhr, textStatus, error){
-                //alert( error);
-                },
                 });
          
-         
-         
+
          
          window.location = "index.html";
      }
@@ -377,16 +335,22 @@
     
      
     function trackBet(betid) {
+        
+        
+        
         $('#selectBet').blur();
-                       
+    
+        
         if (typeof betid == 'undefined') {
          betid = document.getElementById("selectBet").value;
             if (betid == "") {
                 return false;
             }
-        }
+            
+        } 
         
         $.mobile.showPageLoadingMsg();
+
         resetTimer();
         
          $.ajax({
@@ -395,8 +359,14 @@
                 dataType: 'xml',
                 
                 success: function (xml) {
-                parseTrackerBet(xml);
-                $.mobile.hidePageLoadingMsg();
+                    $("#portrait_selectbet").css("display","");
+
+                    parseTrackerBet(xml);
+
+                    $("#menu").hide();
+                    $("#back").show();
+
+                    $.mobile.hidePageLoadingMsg();
                 
                 },
                 error: function(xhr, textStatus, error){
@@ -415,7 +385,7 @@
      
      function parseTrackerBet(xml) {
          
-
+        
          var div = $(tracker);
          div.empty();
          
@@ -424,6 +394,15 @@
          betStatus  = bet.attr("s");
          displayType = bet.attr("dt");
          betId = bet.attr("id");
+         if (portrait == false) {
+             
+             $("#portrait_selectbet").hide();
+         } else {
+             
+             $("#portrait_selectbet").show();
+             
+             
+         }
          if ( $(xml).find("gamebet").attr("type") == "mn") {
               parseMoneylineGamebet($(xml), betStatus, betId, div,displayType);
 
@@ -433,7 +412,7 @@
             
         } 
          
-       
+         
   
          
      }
@@ -509,6 +488,7 @@
    
      
      function parsePointGamebet(xml, betStatus, betId, div, displayType) {
+        
          bscolor = "";
          if (  betStatus == "WON") {
              bscolor="darkgreen";
@@ -522,7 +502,7 @@
          header = "<div align='center' style='padding-top:15px;height:30px;font-size:medium;font-weight:bold;margin-bottom:0px;background-color:lightgray'>"+displayType+": <span  style='font-weight:bold;color:"+bscolor+"'> "+betStatus+"</span></div>";
          
          div.append(header);
-         table =  "<table id='mytable'  cellpadding='3' cellspacing='0' style='width:100%;margin-bottom:20px;border-style:solid;border-width:3px;border-color:black' ><tr style='background-color:black;color:white;height:10%' ><td>Game</td><td >Score</td><td align='center'>Team</td><td align='center' >Bet</td><td align='center' id='betScore'  >Bet Score</td><td id='status' align='center'>ST</td></tr>";
+         table =  "<table id='mytable'  cellpadding='3' cellspacing='0' style='width:100%;margin-bottom:20px;border-style:solid;border-width:3px;border-color:black' ><tr style='background-color:black;color:white;height:10%' ><td>Game</td><td >Score</td><td align='center'>Team</td><td align='center' >Bet</td><td align='center' id='betScore'   >Bet Score</td><td id='status' align='center'>ST</td></tr>";
        
          
          
@@ -607,7 +587,9 @@
          
          table += "</table>";
          div.append(table);
-         $('table td:nth-child(5)').hide();
+         if (portrait == true) {
+             $('table td:nth-child(5)').hide();
+         } 
          $(tracker).show().trigger("updatelayout");
 
        
@@ -617,22 +599,19 @@
      function cancel() {
          
          
+         
+         
          $.ajax({
                 type: 'GET',
                 url: serverUrl+"/m.trackBet?cmd=cancel",
-                cache: false
+                cache: true
                 
          
                 });
          
          
-         if ( document.getElementById("games") == null) {
              
              window.location = "tracker.html";
-         } else {
-             
-             history.back();
-         }
          
      }
      
@@ -692,6 +671,7 @@
         
            margin: 0px;
            padding: 0px;
+            background: white;
         
         }
         
@@ -709,15 +689,15 @@
         
        <div data-role="header" id="header"  data-position="fixed"  >
            
-           <a href="#" onclick="cancel()" data-theme="a"  >Cancel</a>
-
+           <a href="#nav-panel" data-icon="bars"  id="menu" data-iconpos="left"  >Menu</a>
+           <a style="display:none" href="#"  id="back"  onclick="cancel()" data-theme="a"  >Back</a>
 			 
             <h2>Streamer</h2>
             
             
-              <div id="portrait_selectbet" >
-                <select style="display:none" id="selectBet" data-theme="a" onchange="return trackBet();"   >
-                    <option value="">Select a bet to continue </option>
+              <div id="portrait_selectbet" style="display:none"  >
+                <select id="selectBet" data-theme="a" onchange="return trackBet();"   >
+                    <option value="">Options</option>
                 </select>
             
            </div>
@@ -726,10 +706,22 @@
         </div>
     
  <div  id="tracker_content" data-role="content" data-iscroll >
-            
+     
+     
+    
+     
              <div id="tracker"   >
-                <div align="center" id="games" style="height:30px;padding-top:15px;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:black;font-weight:bold;background-color:lightgray;margin-bottom:0px">Games </div>
-                
+                 
+            <div align="center" style="margin-top:20px">
+            <img src="img/eyebetsv3.jpg" alt="etyesbet logo" />
+                     
+            </div>
+                               
+            <ul style="margin-left:15px;margin-right:15px;margin-top:25px;white-space:normal"   data-role="listview" id="stream_bet" data-theme="a" >
+                     
+                     
+                </ul>
+                 
                  
              </div>
              
@@ -737,37 +729,25 @@
      </div>
         
         
+        <div data-role="panel" data-position-fixed="true" style="background-color:black;" data-theme="a" id="nav-panel">
+            <ul data-role="listview" data-theme="a" class="nav-search">
+                <li data-icon="delete"><a href="#" data-rel="close">Close menu</a></li>
+                <li > <a data-icon-pos="left"  href="javascript:window.location='displayBets.html';"  > My Bets </a>  </li>
+                <li><a href="javascript:window.location='displayLeagues.html';"  >Create Bet</a></li>
+                <li><a href="javascript:logout();"  >Sign Out</a></li>
+                
+            </ul>
+            
+            
+        </div><!-- /panel -->
+        
+        
         </div>
      
      
-  <div  data-role="page" id="landscape_page" >
-      <div data-role="header" data-position="fixed" >
-          <div id="landscape_selectbet" >
-              
-              
-              
-              
-          </div>
-          
-          
-          
-          </div>
   
-      <div  data-role="content" data-iscroll >
-          
-         
-       
-          <div id="landscape_tracker" >
-              
-              
-              
-        </div>
-          
-          
-          
-    </div>
       
-      
+     
       
       
 </div>

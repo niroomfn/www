@@ -16,14 +16,12 @@
         
         <script type="text/javascript">
         
-            var serverUrl;
+            var serverUrl = serverInfo.url;
 
             var deviceInfo = function(){
-                serverUrl = serverInfo.url;
                 if (navigator.connection.type == "none") {
                     window.location = "noConnection.html";
                 } else {
-                    
                     
                     $.ajax({
                            type: 'GET',
@@ -60,7 +58,7 @@
             }
             
         
-            document.addEventListener("deviceready", deviceInfo, true);
+            document.addEventListener("deviceready", deviceInfo, false);
         
             
           
@@ -98,7 +96,7 @@
                        
                        if ( $(xml).find("user").attr("valid") == "true") {
                        mybets();
-                       $.mobile.changePage("#landingPage",{   transition: "slide",reverse:true}, true, true);
+                       $.mobile.changePage("#landingPage",{   transition: "slide" });
                             
                        } else {
                        $.mobile.hidePageLoadingMsg();
@@ -496,7 +494,7 @@
                         <tr> <td> <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" /> </td>  </tr>
                         
                         
-                        </table>
+                </table>
                 
                 
             </div>
@@ -505,8 +503,8 @@
                 
                     <fieldset    data-role="controlgroup" data-type="horizontal" >
                         
-                        <a href="#" data-role="button"  data-theme="a" data-icon="add"  onclick="return submitForm()">Register</a>
-                        <a href="#"  data-role="button"  data-theme="a"  data-icon="delete"  onclick="cancelRegister()">Cancel</a>
+                        <a href="#" data-role="button"  data-theme="a"   onclick="return submitForm()">Register</a>
+                        <a href="#"  data-role="button"  data-theme="a"  d  onclick="cancelRegister()">Cancel</a>
                         
                     </fieldset>
                 
@@ -527,7 +525,7 @@
             <div data-role="content" >
                 
                 
-                <div align="center">
+                <div align="center" style="margin-top:20px" >
                     <img src="img/eyebetsv3.jpg" alt="etyesbet logo" />
                     
                 </div>

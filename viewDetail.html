@@ -215,6 +215,9 @@
          
          
          if (result == true) {
+             
+             $.mobile.showPageLoadingMsg();
+             
              betid = document.getElementById('betid').value;
 
              $.ajax({
@@ -224,12 +227,13 @@
                     dataType: 'xml',
                     
                     success: function(xml){
+                    $.mobile.hidePageLoadingMsg();
                     alert("Bet removed successfully");
                     window.location= "displayBets.html";
                     
                     },
                     error: function(xhr, textStatus, error){
-                    
+                    $.mobile.hidePageLoadingMsg();
                     alert(error);
                     }
                     });
@@ -367,10 +371,11 @@
         
         <div  data-role="header" data-theme="a"  data-position="fixed">
 
-            <a href="#nav-panel" data-inline="true"    >Edit Bet</a>
+            <button  data-theme="a" onclick="goback()"    >Back</button>
 
             <h1>Bet Detail</h1>
    
+            <a href="#nav-panel"     >Edit Bet</a>
 
    
         </div>
@@ -382,14 +387,14 @@
     
      <div id="scroller">
      
-    <div  style="margin-bottom:20px;background-color:lightgray;padding-left:10px;padding-right:10px" >  
+    <div  style="background-color:lightgray;margin-top:0px" >
        
-       
-       <span id="titleBetname" style="font-weight:bold" > </span> 
-       
-       
-       <a href="#dialogPage" data-role="button"  data-transition='pop'  data-rel='dialog' data-theme="a" data-iconpos="notext" data-icon="edit" data-inline="true" ></a>
-       </div>
+        <table  style="width:100%;background-color:lightgray;padding-top:10px;padding-bottom:10px">
+           
+           <tr ><td style="font-weight:bold;padding-left:10px;padding-right:10px" id="titleBetname"> </td> </tr>
+           
+      </table>
+    </div>
   		
          <div style="margin-left:10px;margin-right:10px">
          <table style="width:100%;margin-top:15px" id="detail" cellspacing="0" cellpadding="3" >
@@ -406,21 +411,15 @@
 
 </div>
         
-        <div align="center" data-theme="a" data-role="footer" data-position="fixed">
-            
-            
-            
-            <button  data-theme="a" onclick="goback()" data-icon="arrow-l" data-iconpos="left" data-inline="true" >Back</button>
-            
-            
-        </div>
+       
         
         
         
-        <div data-role="panel" data-position-fixed="true" style="background-color:black;" data-theme="a" id="nav-panel">
+        <div data-role="panel" data-position-fixed="true" style="background-color:black" data-theme="a" id="nav-panel">
             <ul data-role="listview" data-theme="a" class="nav-search">
                 <li data-icon="delete"><a href="#" data-rel="close">Cancel</a></li>
-                <li > <a data-icon-pos="left"  href="#" onclick="return deleteBet()"  > Delete Bet </a>  </li>
+               <li> <a href="#dialogPage"   data-transition='pop'  data-rel='dialog'   >Change bet name</a> </li>
+                <li > <a   href="#" onclick="return deleteBet()"  > Delete Bet </a>  </li>
                 <li><a href="#" onclick="addBet()"  >Add Bet</a></li>
                 
             </ul>
