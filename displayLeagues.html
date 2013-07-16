@@ -263,7 +263,7 @@ $.ajax({
 		dataType: 'xml',
 		
 		success: function(xml){
-		
+           $.mobile.hidePageLoadingMsg();
 			window.location = "enterBet.html";
 			
 		},

@@ -3,9 +3,20 @@
     
 <head>
     
+    
+    <script >
+        
+        function retry() {
+            
+            window.location = "index.html";
+        }
+        
+        
+        
+        </script>
+    
 <style>
     
-    font-size:medium;
     
     
     
@@ -24,10 +35,17 @@
 
 
 <div align="center"style="margin-top:30%;margin-left:10px;margin-right:10px;color:darkred;font-weight:bold">
-    No internet connection found. <br/>You must have internet to use this app!!</div>
+    No internet connection found. <br/>You must have internet connection to use this app!!
+    
+    <br/><br/>
+
+    <input type="button" value="Retry" onclick="retry()" />
 
 
+</div>
 
+
+        
 
 
 </body>
